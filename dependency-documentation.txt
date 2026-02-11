@@ -1,0 +1,98 @@
+1. express
+
+Purpose: Web framework for building the HTTP server and API routes.
+
+Why needed:
+Provides routing, middleware support, and request/response handling to build REST APIs efficiently.
+
+2. cors
+
+Purpose: Enables Cross-Origin Resource Sharing.
+
+Why needed:
+Allows frontend applications (running on different domains or ports) to access the backend API securely.
+
+Without it, browsers block cross-origin requests.
+
+3. helmet
+
+Purpose: Adds security-related HTTP headers.
+
+Why needed:
+Protects the application against common web vulnerabilities such as:
+
+Cross-site scripting (XSS)
+
+Clickjacking
+
+MIME sniffing
+
+Protocol downgrade attacks
+
+Improves security with minimal configuration.
+
+4. morgan
+
+Purpose: HTTP request logging middleware.
+
+Why needed:
+Logs incoming requests (method, URL, status code, response time).
+Helps with debugging, monitoring, and identifying failed or slow requests.
+
+5. dotenv
+
+Purpose: Loads environment variables from a .env file.
+
+Why needed:
+Keeps sensitive data (e.g., database URLs, JWT secrets) out of source code.
+Improves security and environment configuration management.
+
+6. jsonwebtoken
+
+Purpose: Creates and verifies JSON Web Tokens (JWTs).
+
+Why needed:
+Implements authentication and authorization by securely signing and validating tokens for users.
+
+7. bcryptjs
+
+Purpose: Password hashing library.
+
+Why needed:
+Ensures passwords are securely hashed before storing in the database.
+Prevents storing plaintext passwords.
+
+8. http-status-codes
+
+Purpose: Provides named constants for HTTP status codes.
+
+Why needed:
+Improves readability and avoids using “magic numbers” like 200 or 404 directly in the code.
+
+Example:
+
+StatusCodes.OK
+StatusCodes.BAD_REQUEST
+
+9. mongodb
+
+Purpose: Official MongoDB Node.js driver.
+
+Why needed:
+Enables communication with a MongoDB database for data storage and retrieval.
+
+10. pg
+
+Purpose: Official PostgreSQL driver.
+
+Why needed:
+Allows the application to connect to and query a PostgreSQL database.
+
+11. nodemon (Dev Dependency)
+
+Purpose: Automatically restarts the server during development.
+
+Why needed:
+Improves development efficiency by reloading the server when code changes.
+
+Not used in production.
