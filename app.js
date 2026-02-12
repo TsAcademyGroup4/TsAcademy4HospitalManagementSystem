@@ -1,6 +1,3 @@
-// Load environment variables from .env
-// require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -23,5 +20,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on port 5000`);
+    console.log(`Server running on port ${PORT}`);
 });
