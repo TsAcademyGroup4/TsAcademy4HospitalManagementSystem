@@ -28,7 +28,7 @@ const admissionSchema = new Schema(
     },
 
     bedId: {
-      type:Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Bed",
       required: false,
     },
@@ -115,30 +115,25 @@ admissionSchema.virtual("lengthOfStay").get(function () {
 });
 
 // Pre-save: Auto-generate admission number
-admissionSchema.pre("save", async function (next) {
-  if (!this.isNew) return next();
+admissionSchema.pre("save", async function () {
+  if (!this.isNew) return;
 
-  try {
-    const lastAdmission = await this.constructor
-      .findOne({}, { admissionNumber: 1 })
-      .sort({ admissionNumber: -1 })
-      .lean();
+  const lastAdmission = await this.constructor
+    .findOne({}, { admissionNumber: 1 })
+    .sort({ admissionNumber: -1 })
+    .lean();
 
-    let nextNumber = 1;
-    if (lastAdmission && lastAdmission.admissionNumber) {
-      const lastNumber = parseInt(lastAdmission.admissionNumber.split("-")[1]);
-      nextNumber = lastNumber + 1;
-    }
-
-    this.admissionNumber = `ADM-${String(nextNumber).padStart(5, "0")}`;
-    next();
-  } catch (error) {
-    next(error);
+  let nextNumber = 1;
+  if (lastAdmission && lastAdmission.admissionNumber) {
+    const lastNumber = parseInt(lastAdmission.admissionNumber.split("-")[1]);
+    nextNumber = lastNumber + 1;
   }
+
+  this.admissionNumber = `ADM-${String(nextNumber).padStart(5, "0")}`;
 });
 
 // Mark bed as occupied
-admissionSchema.pre("save", async function (next) {
+admissionSchema.pre("save", async function () {
   if (this.isNew && this.status === "ACTIVE" && this.bedId) {
     try {
       const Bed = mongoose.model("Bed");
@@ -147,7 +142,6 @@ admissionSchema.pre("save", async function (next) {
       console.error("Error updating bed status:", error.message);
     }
   }
-  next();
 });
 
 // Instance method: Get vital signs

@@ -123,39 +123,33 @@ prescriptionSchema.virtual("balanceDue").get(function () {
 });
 
 // Pre-save: Auto-generate prescription number
-prescriptionSchema.pre("save", async function (next) {
-  if (!this.isNew) return next();
+prescriptionSchema.pre("save", async function () {
+  if (!this.isNew) return;
 
-  try {
-    const lastPrescription = await this.constructor
-      .findOne({}, { prescriptionNumber: 1 })
-      .sort({ prescriptionNumber: -1 })
-      .lean();
+  const lastPrescription = await this.constructor
+    .findOne({}, { prescriptionNumber: 1 })
+    .sort({ prescriptionNumber: -1 })
+    .lean();
 
-    let nextNumber = 1;
-    if (lastPrescription && lastPrescription.prescriptionNumber) {
-      const lastNumber = parseInt(
-        lastPrescription.prescriptionNumber.split("-")[1],
-      );
-      nextNumber = lastNumber + 1;
-    }
-
-    this.prescriptionNumber = `PRE-${String(nextNumber).padStart(5, "0")}`;
-    next();
-  } catch (error) {
-    next(error);
+  let nextNumber = 1;
+  if (lastPrescription && lastPrescription.prescriptionNumber) {
+    const lastNumber = parseInt(
+      lastPrescription.prescriptionNumber.split("-")[1],
+    );
+    nextNumber = lastNumber + 1;
   }
+
+  this.prescriptionNumber = `PRE-${String(nextNumber).padStart(5, "0")}`;
 });
 
 // Calculate total
-prescriptionSchema.pre("save", function (next) {
+prescriptionSchema.pre("save", function () {
   if (this.isModified("items")) {
     this.totalAmount = this.items.reduce(
       (sum, item) => sum + item.totalPrice,
       0,
     );
   }
-  next();
 });
 
 // Instance method: Mark paid

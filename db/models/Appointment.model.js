@@ -131,7 +131,7 @@ appointmentSchema.virtual("fullDateTime").get(function () {
   if (!this.appointmentDate || !this.timeSlot) return null;
 
   const [hours, minutes] = this.timeSlot.split(":");
-  const dateTime = new Date(this.appointentDate);
+  const dateTime = new Date(this.appointmentDate);
   dateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
   return dateTime;
@@ -145,70 +145,57 @@ appointmentSchema.virtual("isUpcoming").get(function () {
 
 // isToday
 appointmentSchema.virtual("isToday").get(function () {
-  if (!this.appointentDate) return false;
+  if (!this.appointmentDate) return false;
 
   const today = new Date();
-  const appointmentDay = new Date(this.appointentDate);
+  const appointmentDay = new Date(this.appointmentDate);
 
   return today.toDateString() === appointmentDay.toDateString();
 });
 
 // Pre save: Autogenerate appointment number
-appointmentSchema.pre("save", async function (next) {
+appointmentSchema.pre("save", async function () {
   if (!this.isNew) {
-    return next();
+    return;
   }
 
-  try {
-    const lastAppointment = await this.constructor
-      .findOne({}, { appointmentNumber: 1 })
-      .sort({ appointmentNumber: -1 })
-      .lean();
+  const lastAppointment = await this.constructor
+    .findOne({}, { appointmentNumber: 1 })
+    .sort({ appointmentNumber: -1 })
+    .lean();
 
-    let nextNumber = 1;
+  let nextNumber = 1;
 
-    if (lastAppointment && lastAppointment.appointmentNumber) {
-      const lastNumber = parseInt(
-        lastAppointment.appointmentNumber.split("-")[1],
-      );
-      nextNumber = lastNumber + 1;
-    }
-
-    this.appointmentNumber = `APT-${String(nextNumber).padStart(5, "0")}`;
-
-    next();
-  } catch (error) {
-    next(error);
+  if (lastAppointment && lastAppointment.appointmentNumber) {
+    const lastNumber = parseInt(
+      lastAppointment.appointmentNumber.split("-")[1],
+    );
+    nextNumber = lastNumber + 1;
   }
+
+  this.appointmentNumber = `APT-${String(nextNumber).padStart(5, "0")}`;
 });
 
 // Validate no double booking
-appointmentSchema.pre("save", async function (next) {
+appointmentSchema.pre("save", async function () {
   if (
     !this.isModified("appointmentDate") &&
     !this.isModified("timeSlot") &&
     !this.isNew
   ) {
-    return next();
+    return;
   }
 
-  try {
-    const existingAppointment = await this.constructor.findOne({
-      doctorId: this.doctorId,
-      appointentDate: this.appointentDate,
-      timeSlot: this.timeSlot,
-      status: { $nin: ["CANCELLED", "NO_SHOW"] },
-      _id: { $ne: this._id },
-    });
+  const existingAppointment = await this.constructor.findOne({
+    doctorId: this.doctorId,
+    appointentDate: this.appointentDate,
+    timeSlot: this.timeSlot,
+    status: { $nin: ["CANCELLED", "NO_SHOW"] },
+    _id: { $ne: this._id },
+  });
 
-    if (existingAppointment) {
-      const error = new Error("Doctor already has an appointment at this time");
-      return next(error);
-    }
-
-    next();
-  } catch (error) {
-    next(error);
+  if (existingAppointment) {
+    throw new Error("Doctor already has an appointment at this time");
   }
 });
 
@@ -235,7 +222,7 @@ appointmentSchema.methods.markNoShow = async function () {
 
 // Start
 appointmentSchema.methods.start = async function () {
-  this.staus = "IN_PROGRESS";
+  this.status = "IN_PROGRESS";
   return await this.save();
 };
 

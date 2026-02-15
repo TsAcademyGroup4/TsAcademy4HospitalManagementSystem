@@ -106,7 +106,7 @@ emergencyCaseSchema.index({ status: 1, arrivedAt: -1 });
 // Virtual: display name
 emergencyCaseSchema.virtual("displayName").get(function () {
   if (this.populated("patientId") && this.patientId) {
-    return this.patientId.fullName;
+    return `${this.patientId.firstName} ${this.patientId.lastName}`;
   }
   return this.temporaryPatientName || "Unidentified";
 });

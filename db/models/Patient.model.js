@@ -148,30 +148,24 @@ patientSchema.virtual("fullName").get(function () {
 });
 
 // Presave: Auto generate patientId
-patientSchema.pre("save", async function (next) {
+patientSchema.pre("save", async function () {
   if (!this.isNew) {
-    return next();
+    return;
   }
 
-  try {
-    const lastPatient = await this.constructor
-      .findOne({}, { patientId: 1 })
-      .sort({ patientId: -1 })
-      .lean();
+  const lastPatient = await this.constructor
+    .findOne({}, { patientId: 1 })
+    .sort({ patientId: -1 })
+    .lean();
 
-    let nextNumber = 1;
+  let nextNumber = 1;
 
-    if (lastPatient && lastPatient.patientId) {
-      const lastNumber = parseInt(lastPatient.patientId.split("-")[1]);
-      nextNumber = lastNumber + 1;
-    }
-
-    this.patientId = `PAT-${String(nextNumber).padStart(5, "0")}`;
-
-    next();
-  } catch (error) {
-    next(error);
+  if (lastPatient && lastPatient.patientId) {
+    const lastNumber = parseInt(lastPatient.patientId.split("-")[1]);
+    nextNumber = lastNumber + 1;
   }
+
+  this.patientId = `PAT-${String(nextNumber).padStart(5, "0")}`;
 });
 
 // Instanc method: Get medical history
