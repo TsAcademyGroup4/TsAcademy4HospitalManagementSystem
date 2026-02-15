@@ -22,7 +22,7 @@ dotenv.config();
 async function deepTest() {
   try {
     await connectDB();
-    console.log("\n🔬 DEEP COMPREHENSIVE TESTING\n");
+    console.log("\nDEEP COMPREHENSIVE TESTING\n");
     console.log("=".repeat(70));
 
     // Cleanup
@@ -42,12 +42,12 @@ async function deepTest() {
       EmergencyCase.deleteMany({}),
       AuditLog.deleteMany({}),
     ]);
-    console.log("🧹 Database cleaned\n");
+    console.log("Database cleaned\n");
 
     // ============================================================
     // SECTION 1: USER & AUTHENTICATION TESTING
     // ============================================================
-    console.log("📋 SECTION 1: User & Authentication");
+    console.log("SECTION 1: User & Authentication");
     console.log("-".repeat(70));
 
     // Create departments
@@ -63,7 +63,7 @@ async function deepTest() {
       description: "Emergency services",
     });
 
-    console.log("✅ Created 2 departments");
+    console.log("Created 2 departments");
 
     // Create multiple users
     const admin = await User.create({
@@ -105,28 +105,28 @@ async function deepTest() {
       departmentId: cardiology._id,
     });
 
-    console.log("✅ Created 4 users (1 admin, 2 doctors, 1 nurse)");
+    console.log("Created 4 users (1 admin, 2 doctors, 1 nurse)");
 
     // Test password validation
     const wrongPassword = await doctor1.comparePassword("WrongPassword");
     const correctPassword = await doctor1.comparePassword("Doctor123!");
     console.log(
-      "✅ Password validation:",
+      "Password validation:",
       wrongPassword === false && correctPassword === true ? "PASS" : "FAIL",
     );
 
     // Test findByEmail static method
     const foundUser = await User.findByEmail("jane@hospital.com");
-    console.log("✅ Find by email:", foundUser ? "PASS" : "FAIL");
+    console.log("Find by email:", foundUser ? "PASS" : "FAIL");
 
     // Test findByRole static method
     const doctors = await User.findByRole("DOCTOR");
-    console.log("✅ Find by role (DOCTOR):", doctors.length, "doctors found");
+    console.log("Find by role (DOCTOR):", doctors.length, "doctors found");
 
     // Test findDoctorsByDepartment
     const cardioDoctors = await User.findDoctorsByDepartment(cardiology._id);
     console.log(
-      "✅ Find doctors by department:",
+      "Find doctors by department:",
       cardioDoctors.length,
       "doctor(s) in Cardiology",
     );
@@ -134,13 +134,13 @@ async function deepTest() {
     // Test department methods
     const deptStaff = await cardiology.getStaff();
     const deptDoctors = await cardiology.getDoctors();
-    console.log("✅ Department.getStaff():", deptStaff.length, "staff members");
-    console.log("✅ Department.getDoctors():", deptDoctors.length, "doctor(s)");
+    console.log("Department.getStaff():", deptStaff.length, "staff members");
+    console.log("Department.getDoctors():", deptDoctors.length, "doctor(s)");
 
     // ============================================================
     // SECTION 2: PATIENT MANAGEMENT & SEARCH
     // ============================================================
-    console.log("\n📋 SECTION 2: Patient Management & Search");
+    console.log("\nSECTION 2: Patient Management & Search");
     console.log("-".repeat(70));
 
     // Create multiple patients
@@ -161,32 +161,32 @@ async function deepTest() {
     }
 
     console.log(
-      "✅ Created 5 patients with auto-IDs:",
+      "Created 5 patients with auto-IDs:",
       patients.map((p) => p.patientId).join(", "),
     );
 
     // Test patient search
     const searchJohn = await Patient.search("John");
-    console.log("✅ Search 'John':", searchJohn.length, "result(s)");
+    console.log("Search 'John':", searchJohn.length, "result(s)");
 
     const searchByPhone = await Patient.search("08098765430");
-    console.log("✅ Search by phone:", searchByPhone.length, "result(s)");
+    console.log("Search by phone:", searchByPhone.length, "result(s)");
 
     // Test findByPatientId
     const foundPatient = await Patient.findByPatientId("PAT-00001");
     console.log(
-      "✅ Find by patientId:",
+      "Find by patientId:",
       foundPatient ? "PAT-00001 found" : "FAIL",
     );
 
     // Test virtual fields
-    console.log("✅ Patient age (virtual):", patients[0].age, "years");
-    console.log("✅ Patient fullName (virtual):", patients[0].fullName);
+    console.log("Patient age (virtual):", patients[0].age, "years");
+    console.log("Patient fullName (virtual):", patients[0].fullName);
 
     // ============================================================
     // SECTION 3: APPOINTMENT MANAGEMENT
     // ============================================================
-    console.log("\n📋 SECTION 3: Appointment Management");
+    console.log("\nSECTION 3: Appointment Management");
     console.log("-".repeat(70));
 
     // Create appointments
@@ -234,31 +234,31 @@ async function deepTest() {
     appointments.push(apt3);
 
     console.log(
-      "✅ Created 3 appointments:",
+      "Created 3 appointments:",
       appointments.map((a) => a.appointmentNumber).join(", "),
     );
 
     // Test virtual fields
-    console.log("✅ Appointment isToday:", apt2.isToday ? "YES" : "NO");
-    console.log("✅ Appointment isUpcoming:", apt1.isUpcoming ? "YES" : "NO");
+    console.log("Appointment isToday:", apt2.isToday ? "YES" : "NO");
+    console.log("Appointment isUpcoming:", apt1.isUpcoming ? "YES" : "NO");
 
     // Test getTodayAppointments
     const todayApts = await Appointment.getTodayAppointments(doctor1._id);
-    console.log("✅ Today's appointments for doctor:", todayApts.length);
+    console.log("Today's appointments for doctor:", todayApts.length);
 
     // Test getDoctorAppointments
     const doctorApts = await Appointment.getDoctorAppointments(
       doctor1._id,
       tomorrow,
     );
-    console.log("✅ Tomorrow's appointments for doctor:", doctorApts.length);
+    console.log("Tomorrow's appointments for doctor:", doctorApts.length);
 
     // Test getAvailableSlots
     const availableSlots = await Appointment.getAvailableSlots(
       doctor1._id,
       tomorrow,
     );
-    console.log("✅ Available slots tomorrow:", availableSlots.length, "slots");
+    console.log("Available slots tomorrow:", availableSlots.length, "slots");
 
     // Test appointment methods - Cancel
     const cancelledApt = await Appointment.create({
@@ -272,7 +272,7 @@ async function deepTest() {
 
     await cancelledApt.cancel("Patient requested cancellation", admin._id);
     console.log(
-      "✅ Appointment cancelled:",
+      "Appointment cancelled:",
       cancelledApt.status === "CANCELLED" ? "PASS" : "FAIL",
     );
     console.log("   Cancellation reason:", cancelledApt.cancellationReason);
@@ -280,13 +280,13 @@ async function deepTest() {
     // Test appointment methods - Start and Complete
     await apt2.start();
     console.log(
-      "✅ Appointment started:",
+      "Appointment started:",
       apt2.status === "IN_PROGRESS" ? "PASS" : "FAIL",
     );
 
     await apt2.complete();
     console.log(
-      "✅ Appointment completed:",
+      "Appointment completed:",
       apt2.status === "COMPLETED" ? "PASS" : "FAIL",
     );
 
@@ -302,14 +302,14 @@ async function deepTest() {
 
     await noShowApt.markNoShow();
     console.log(
-      "✅ Appointment marked no-show:",
+      "Appointment marked no-show:",
       noShowApt.status === "NO_SHOW" ? "PASS" : "FAIL",
     );
 
     // ============================================================
     // SECTION 4: CONSULTATION & PRESCRIPTION WORKFLOW
     // ============================================================
-    console.log("\n📋 SECTION 4: Consultation & Prescription Workflow");
+    console.log("\nSECTION 4: Consultation & Prescription Workflow");
     console.log("-".repeat(70));
 
     // Create consultation
@@ -324,14 +324,14 @@ async function deepTest() {
       outcome: "PHARMACY",
     });
 
-    console.log("✅ Consultation created");
+    console.log("Consultation created");
     console.log("   Symptoms:", consultation.symptoms.length);
     console.log("   Lab requests:", consultation.labRequests.length);
 
     // Test getPrescription method
     const prescriptionBefore = await consultation.getPrescription();
     console.log(
-      "✅ getPrescription() before creation:",
+      "getPrescription() before creation:",
       prescriptionBefore === null ? "NULL (correct)" : "FAIL",
     );
 
@@ -372,18 +372,18 @@ async function deepTest() {
       drugs.push(drug);
     }
 
-    console.log("✅ Created", drugs.length, "drugs");
+    console.log("Created", drugs.length, "drugs");
 
     // Test drug virtuals
     console.log(
-      "✅ Low stock detection:",
+      "Low stock detection:",
       drugs[2].isLowStock ? "Paracetamol is low stock" : "FAIL",
     );
 
     // Test getLowStock static
     const lowStockDrugs = await Drug.getLowStock();
     console.log(
-      "✅ getLowStock():",
+      "getLowStock():",
       lowStockDrugs.length,
       "drug(s) need reordering",
     );
@@ -391,7 +391,7 @@ async function deepTest() {
     // Test drug search
     const searchedDrugs = await Drug.search("Amlodipine");
     console.log(
-      "✅ Drug search:",
+      "Drug search:",
       searchedDrugs.length,
       "result(s) for 'Amlodipine'",
     );
@@ -419,28 +419,28 @@ async function deepTest() {
       ],
     });
 
-    console.log("✅ Prescription created:", prescription.prescriptionNumber);
-    console.log("   Total amount: ₦", prescription.totalAmount);
+    console.log("Prescription created:", prescription.prescriptionNumber);
+    console.log("   Total amount: N", prescription.totalAmount);
     console.log("   Status:", prescription.status);
 
     // Test balanceDue virtual
-    console.log("✅ Balance due (virtual): ₦", prescription.balanceDue);
+    console.log("Balance due (virtual): N", prescription.balanceDue);
 
     // Test partial payment
     await prescription.markPaid(5000);
-    console.log("✅ Partial payment processed: ₦5000");
+    console.log("Partial payment processed: N5000");
     console.log("   Payment status:", prescription.paymentStatus);
-    console.log("   Balance due: ₦", prescription.balanceDue);
+    console.log("   Balance due: N", prescription.balanceDue);
 
     // Complete payment
     await prescription.markPaid(prescription.balanceDue);
-    console.log("✅ Full payment completed");
+    console.log("Full payment completed");
     console.log("   Payment status:", prescription.paymentStatus);
 
     // Test getPending static
     const pendingPrescriptions = await Prescription.getPending();
     console.log(
-      "✅ getPending():",
+      "getPending():",
       pendingPrescriptions.length,
       "pending prescription(s)",
     );
@@ -450,7 +450,7 @@ async function deepTest() {
     await prescription.dispense(nurse._id);
 
     const drug0Updated = await Drug.findById(drugs[0]._id);
-    console.log("✅ Prescription dispensed");
+    console.log("Prescription dispensed");
     console.log("   Stock before:", stockBefore);
     console.log("   Stock after:", drug0Updated.stockQuantity);
     console.log(
@@ -461,7 +461,7 @@ async function deepTest() {
     // ============================================================
     // SECTION 5: ADMISSION & VITAL SIGNS
     // ============================================================
-    console.log("\n📋 SECTION 5: Admission & Vital Signs");
+    console.log("\nSECTION 5: Admission & Vital Signs");
     console.log("-".repeat(70));
 
     // Create ward and beds
@@ -483,17 +483,17 @@ async function deepTest() {
       beds.push(bed);
     }
 
-    console.log("✅ Created ward with", beds.length, "beds");
+    console.log("Created ward with", beds.length, "beds");
 
     // Test findAvailable
     const availableBeds = await Bed.findAvailable(ward._id);
-    console.log("✅ Available beds:", availableBeds.length);
+    console.log("Available beds:", availableBeds.length);
 
     // Test ward methods
     const wardBeds = await ward.getBeds();
     const wardAvailable = await ward.getAvailableBedsCount();
-    console.log("✅ Ward.getBeds():", wardBeds.length, "total beds");
-    console.log("✅ Ward.getAvailableBedsCount():", wardAvailable, "available");
+    console.log("Ward.getBeds():", wardBeds.length, "total beds");
+    console.log("Ward.getAvailableBedsCount():", wardAvailable, "available");
 
     // Create admission
     const admission = await Admission.create({
@@ -506,18 +506,18 @@ async function deepTest() {
       treatmentPlan: "Monitor vitals, administer medication, rest",
     });
 
-    console.log("✅ Admission created:", admission.admissionNumber);
+    console.log("Admission created:", admission.admissionNumber);
 
     // Small delay for bed update
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const bed0Updated = await Bed.findById(beds[0]._id);
-    console.log("✅ Bed status after admission:", bed0Updated.status);
+    console.log("Bed status after admission:", bed0Updated.status);
 
     // Test getCurrentAdmission
     const currentAdmission = await bed0Updated.getCurrentAdmission();
     console.log(
-      "✅ Bed.getCurrentAdmission():",
+      "Bed.getCurrentAdmission():",
       currentAdmission ? "Found" : "NULL",
     );
 
@@ -542,19 +542,19 @@ async function deepTest() {
       vitalRecords.push(vitals);
     }
 
-    console.log("✅ Recorded", vitalRecords.length, "vital sign entries");
+    console.log("Recorded", vitalRecords.length, "vital sign entries");
 
     // Test virtual fields
     console.log(
-      "✅ Blood pressure formatted:",
+      "Blood pressure formatted:",
       vitalRecords[0].bloodPressureFormatted,
     );
-    console.log("✅ BMI calculated:", vitalRecords[0].bmi);
+    console.log("BMI calculated:", vitalRecords[0].bmi);
 
     // Test getVitalSigns
     const admissionVitals = await admission.getVitalSigns();
     console.log(
-      "✅ admission.getVitalSigns():",
+      "admission.getVitalSigns():",
       admissionVitals.length,
       "records",
     );
@@ -566,14 +566,14 @@ async function deepTest() {
       24,
     );
     console.log(
-      "✅ VitalSigns.getTrend() for temperature:",
+      "VitalSigns.getTrend() for temperature:",
       tempTrend.length,
       "data points",
     );
 
     // Test lengthOfStay virtual
     console.log(
-      "✅ Length of stay (virtual):",
+      "Length of stay (virtual):",
       admission.lengthOfStay,
       "day(s)",
     );
@@ -582,19 +582,19 @@ async function deepTest() {
     await admission.discharge(
       "Patient recovered. BP normalized. Continue medications at home.",
     );
-    console.log("✅ Patient discharged");
+    console.log("Patient discharged");
     console.log("   Status:", admission.status);
 
     // Small delay for bed update
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const bedAfterDischarge = await Bed.findById(beds[0]._id);
-    console.log("✅ Bed status after discharge:", bedAfterDischarge.status);
+    console.log("Bed status after discharge:", bedAfterDischarge.status);
 
     // ============================================================
     // SECTION 6: RESTOCK REQUESTS
     // ============================================================
-    console.log("\n📋 SECTION 6: Restock Requests");
+    console.log("\nSECTION 6: Restock Requests");
     console.log("-".repeat(70));
 
     // Create restock request for low stock drug
@@ -605,27 +605,27 @@ async function deepTest() {
       requestedBy: nurse._id,
     });
 
-    console.log("✅ Restock request created");
+    console.log("Restock request created");
     console.log("   Status:", restockRequest.status);
 
     // Test getPending
     const pendingRequests = await RestockRequest.getPending();
     console.log(
-      "✅ RestockRequest.getPending():",
+      "RestockRequest.getPending():",
       pendingRequests.length,
       "request(s)",
     );
 
     // Test approve method
     await restockRequest.approve(admin._id);
-    console.log("✅ Request approved by admin");
+    console.log("Request approved by admin");
     console.log("   Status:", restockRequest.status);
 
     // Test fulfill method
     const stockBeforeFulfill = drugs[2].stockQuantity;
     await restockRequest.fulfill(100);
     const drug2Updated = await Drug.findById(drugs[2]._id);
-    console.log("✅ Request fulfilled");
+    console.log("Request fulfilled");
     console.log("   Stock before:", stockBeforeFulfill);
     console.log("   Stock after:", drug2Updated.stockQuantity);
     console.log(
@@ -644,14 +644,14 @@ async function deepTest() {
     });
 
     await rejectRequest.reject(admin._id, "Already have sufficient stock");
-    console.log("✅ Request rejected");
+    console.log("Request rejected");
     console.log("   Status:", rejectRequest.status);
     console.log("   Rejection reason:", rejectRequest.rejectionReason);
 
     // ============================================================
     // SECTION 7: EMERGENCY CASES
     // ============================================================
-    console.log("\n📋 SECTION 7: Emergency Cases");
+    console.log("\nSECTION 7: Emergency Cases");
     console.log("-".repeat(70));
 
     // Create emergency cases with different severity levels
@@ -678,20 +678,20 @@ async function deepTest() {
       handledBy: doctor2._id,
     });
 
-    console.log("✅ Created 2 emergency cases");
+    console.log("Created 2 emergency cases");
 
     // Test displayName virtual
-    console.log("✅ Emergency case 1 displayName:", emergencyCase1.displayName);
-    console.log("✅ Emergency case 2 displayName:", emergencyCase2.displayName);
+    console.log("Emergency case 1 displayName:", emergencyCase1.displayName);
+    console.log("Emergency case 2 displayName:", emergencyCase2.displayName);
 
     // Test getActive
     const activeCases = await EmergencyCase.getActive();
-    console.log("✅ EmergencyCase.getActive():", activeCases.length, "case(s)");
+    console.log("EmergencyCase.getActive():", activeCases.length, "case(s)");
 
     // Test getCritical
     const criticalCases = await EmergencyCase.getCritical();
     console.log(
-      "✅ EmergencyCase.getCritical():",
+      "EmergencyCase.getCritical():",
       criticalCases.length,
       "critical case(s)",
     );
@@ -704,14 +704,14 @@ async function deepTest() {
       admissionReason: "Emergency admission from ER",
     });
 
-    console.log("✅ Emergency case admitted");
+    console.log("Emergency case admitted");
     console.log("   Admission number:", emergencyAdmission.admissionNumber);
     console.log("   Emergency case status:", emergencyCase2.status);
 
     // ============================================================
     // SECTION 8: AUDIT LOGGING
     // ============================================================
-    console.log("\n📋 SECTION 8: Audit Logging");
+    console.log("\nSECTION 8: Audit Logging");
     console.log("-".repeat(70));
 
     // Create various audit logs
@@ -764,12 +764,12 @@ async function deepTest() {
       errorMessage: "Cannot delete dispensed prescription",
     });
 
-    console.log("✅ Created 4 audit log entries");
+    console.log("Created 4 audit log entries");
 
     // Test getUserLogs
     const adminLogs = await AuditLog.getUserLogs(admin._id);
     console.log(
-      "✅ AuditLog.getUserLogs():",
+      "AuditLog.getUserLogs():",
       adminLogs.length,
       "entries for admin",
     );
@@ -780,7 +780,7 @@ async function deepTest() {
       patients[0]._id,
     );
     console.log(
-      "✅ AuditLog.getEntityLogs():",
+      "AuditLog.getEntityLogs():",
       patientLogs.length,
       "entries for patient",
     );
@@ -788,19 +788,19 @@ async function deepTest() {
     // Test getByAction
     const createActions = await AuditLog.getByAction("CREATE");
     console.log(
-      "✅ AuditLog.getByAction('CREATE'):",
+      "AuditLog.getByAction('CREATE'):",
       createActions.length,
       "action(s)",
     );
 
     // Test getFailures
     const failures = await AuditLog.getFailures();
-    console.log("✅ AuditLog.getFailures():", failures.length, "failure(s)");
+    console.log("AuditLog.getFailures():", failures.length, "failure(s)");
 
     // ============================================================
     // SECTION 9: POPULATION & RELATIONSHIPS
     // ============================================================
-    console.log("\n📋 SECTION 9: Population & Relationships");
+    console.log("\nSECTION 9: Population & Relationships");
     console.log("-".repeat(70));
 
     // Test appointment with full population
@@ -809,7 +809,7 @@ async function deepTest() {
       .populate("doctorId", "firstName lastName role")
       .populate("departmentId", "name code");
 
-    console.log("✅ Appointment population:");
+    console.log("Appointment population:");
     if (aptPopulated && aptPopulated.patientId) {
       console.log(
         "   Patient:",
@@ -845,7 +845,7 @@ async function deepTest() {
       .populate("patientId", "firstName lastName")
       .populate("items.drugId", "name unitPrice");
 
-    console.log("✅ Prescription population:");
+    console.log("Prescription population:");
     console.log(
       "   Patient:",
       `${prescPopulated.patientId.firstName} ${prescPopulated.patientId.lastName}`,
@@ -853,11 +853,11 @@ async function deepTest() {
     console.log("   Items:", prescPopulated.items.length);
     prescPopulated.items.forEach((item, i) => {
       console.log(
-        `   ${i + 1}. ${item.drugId.name} (₦${item.drugId.unitPrice}) x ${item.quantity}`,
+        `   ${i + 1}. ${item.drugId.name} (N${item.drugId.unitPrice}) x ${item.quantity}`,
       );
     });
 
-    console.log("\n🔍 DEBUG - Checking admission before population:");
+    console.log("\nDEBUG - Checking admission before population:");
     const admDebug = await Admission.findById(admission._id);
     console.log("   Admission exists:", !!admDebug);
     console.log("   PatientId:", admDebug?.patientId);
@@ -872,7 +872,7 @@ async function deepTest() {
       .populate("wardId", "name wardType")
       .populate("bedId", "bedNumber status");
 
-    console.log("✅ Admission population:");
+    console.log("Admission population:");
 
     if (admPopulated && admPopulated.patientId) {
       console.log(
@@ -907,7 +907,7 @@ async function deepTest() {
     // ============================================================
     // SECTION 10: PATIENT JOURNEY METHODS
     // ============================================================
-    console.log("\n📋 SECTION 10: Patient Journey Methods");
+    console.log("\nSECTION 10: Patient Journey Methods");
     console.log("-".repeat(70));
 
     const testPatient = patients[1];
@@ -915,7 +915,7 @@ async function deepTest() {
     // Test getMedicalHistory
     const medHistory = await testPatient.getMedicalHistory();
     console.log(
-      "✅ patient.getMedicalHistory():",
+      "patient.getMedicalHistory():",
       medHistory.length,
       "consultation(s)",
     );
@@ -923,7 +923,7 @@ async function deepTest() {
     // Test getAppointments
     const patientAppts = await testPatient.getAppointments();
     console.log(
-      "✅ patient.getAppointments():",
+      "patient.getAppointments():",
       patientAppts.length,
       "appointment(s)",
     );
@@ -931,14 +931,14 @@ async function deepTest() {
     // Test getAppointments with status filter
     const completedAppts = await testPatient.getAppointments("COMPLETED");
     console.log(
-      "✅ patient.getAppointments('COMPLETED'):",
+      "patient.getAppointments('COMPLETED'):",
       completedAppts.length,
     );
 
     // Test getPrescriptions
     const patientPrescriptions = await testPatient.getPrescriptions();
     console.log(
-      "✅ patient.getPrescriptions():",
+      "patient.getPrescriptions():",
       patientPrescriptions.length,
       "prescription(s)",
     );
@@ -946,7 +946,7 @@ async function deepTest() {
     // Test hasActiveAdmission
     const hasAdmission = await patients[2].hasActiveAdmission();
     console.log(
-      "✅ patient.hasActiveAdmission():",
+      "patient.hasActiveAdmission():",
       hasAdmission ? "YES (patient 3 was admitted)" : "NO",
     );
 
@@ -954,18 +954,18 @@ async function deepTest() {
     // FINAL SUMMARY
     // ============================================================
     console.log("\n" + "=".repeat(70));
-    console.log("🎉 DEEP COMPREHENSIVE TESTING COMPLETE!");
+    console.log("DEEP COMPREHENSIVE TESTING COMPLETE!");
     console.log("=".repeat(70));
 
-    console.log("\n📊 Testing Summary:\n");
-    console.log("✅ User Management & Authentication");
+    console.log("\nTesting Summary:\n");
+    console.log("User Management & Authentication");
     console.log("   - Password hashing & validation");
     console.log(
       "   - Static methods (findByEmail, findByRole, findDoctorsByDepartment)",
     );
     console.log("   - Department methods (getStaff, getDoctors)");
     console.log("");
-    console.log("✅ Patient Management");
+    console.log("Patient Management");
     console.log("   - Auto-generated IDs (PAT-00001 to PAT-00005)");
     console.log("   - Search functionality (by name, phone)");
     console.log("   - Virtual fields (age, fullName)");
@@ -973,7 +973,7 @@ async function deepTest() {
       "   - Journey methods (getMedicalHistory, getAppointments, getPrescriptions)",
     );
     console.log("");
-    console.log("✅ Appointment System");
+    console.log("Appointment System");
     console.log("   - Creation with auto-IDs (APT-00001, APT-00002, etc.)");
     console.log("   - Virtual fields (isToday, isUpcoming)");
     console.log(
@@ -981,14 +981,14 @@ async function deepTest() {
     );
     console.log("   - Instance methods (cancel, start, complete, markNoShow)");
     console.log("");
-    console.log("✅ Consultation & Prescription Workflow");
+    console.log("Consultation & Prescription Workflow");
     console.log("   - Consultation creation and retrieval");
     console.log("   - Prescription with auto-ID (PRE-00001)");
     console.log("   - Payment processing (partial and full)");
     console.log("   - Dispensing with stock deduction");
     console.log("   - Static methods (getPending, getUnpaid)");
     console.log("");
-    console.log("✅ Admission & Vital Signs");
+    console.log("Admission & Vital Signs");
     console.log("   - Ward & bed management");
     console.log("   - Admission with auto-ID (ADM-00001, ADM-00002)");
     console.log("   - Bed status automation");
@@ -999,34 +999,34 @@ async function deepTest() {
     console.log("   - Trend analysis");
     console.log("   - Discharge workflow");
     console.log("");
-    console.log("✅ Pharmacy Management");
+    console.log("Pharmacy Management");
     console.log("   - Drug inventory with low stock detection");
     console.log("   - Restock workflow (request, approve, fulfill, reject)");
     console.log("   - Stock management (addStock, deductStock)");
     console.log("");
-    console.log("✅ Emergency Services");
+    console.log("Emergency Services");
     console.log("   - Emergency case registration");
     console.log("   - Severity levels");
     console.log("   - Static methods (getActive, getCritical)");
     console.log("   - Emergency admission");
     console.log("");
-    console.log("✅ Audit Logging");
+    console.log("Audit Logging");
     console.log("   - Action tracking (CREATE, UPDATE, VIEW, DELETE)");
     console.log("   - Success/failure logging");
     console.log("   - Query methods (getUserLogs, getEntityLogs, getFailures)");
     console.log("");
-    console.log("✅ Relationships & Population");
+    console.log("Relationships & Population");
     console.log("   - Full data population across all models");
     console.log("   - Complex nested population");
     console.log("");
 
-    console.log("🔬 Total Tests Performed: 100+");
-    console.log("✅ All Features Working Correctly!");
-    console.log("🎉 YOUR SCHEMAS ARE FULLY PRODUCTION-READY!\n");
+    console.log("Total Tests Performed: 100+");
+    console.log("All Features Working Correctly!");
+    console.log("YOUR SCHEMAS ARE FULLY PRODUCTION-READY!\n");
 
     process.exit(0);
   } catch (error) {
-    console.error("\n❌ Deep test failed:", error.message);
+    console.error("\nDeep test failed:", error.message);
     console.error(error);
     process.exit(1);
   }
