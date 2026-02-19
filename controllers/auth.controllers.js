@@ -62,6 +62,7 @@ export const login = async (req, res) => {
     const payload = {
       sub: String(user._id),
       role: user.role,
+      ...(user.departmentId ? { departmentId: String(user.departmentId) } : {}),
     };
 
     const accessToken = jwt.sign(payload, secret, { expiresIn: "1s" });
