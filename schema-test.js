@@ -572,11 +572,7 @@ async function deepTest() {
     );
 
     // Test lengthOfStay virtual
-    console.log(
-      "Length of stay (virtual):",
-      admission.lengthOfStay,
-      "day(s)",
-    );
+    console.log("Length of stay (virtual):", admission.lengthOfStay, "day(s)");
 
     // Discharge patient
     await admission.discharge(
@@ -877,7 +873,7 @@ async function deepTest() {
     if (admPopulated && admPopulated.patientId) {
       console.log(
         "   Patient:",
-        `${admPopulated.patientId.firstName} ${admPopulated.patientId.lastName}`
+        `${admPopulated.patientId.firstName} ${admPopulated.patientId.lastName}`,
       );
     } else {
       console.log("   Patient: NULL (admission or patient not found)");
@@ -886,20 +882,28 @@ async function deepTest() {
     if (admPopulated && admPopulated.doctorId) {
       console.log(
         "   Doctor:",
-        `${admPopulated.doctorId.firstName} ${admPopulated.doctorId.lastName}`
+        `${admPopulated.doctorId.firstName} ${admPopulated.doctorId.lastName}`,
       );
     } else {
       console.log("   Doctor: NULL");
     }
 
     if (admPopulated && admPopulated.wardId) {
-      console.log("   Ward:", admPopulated.wardId.name, `(${admPopulated.wardId.wardType})`);
+      console.log(
+        "   Ward:",
+        admPopulated.wardId.name,
+        `(${admPopulated.wardId.wardType})`,
+      );
     } else {
       console.log("   Ward: NULL");
     }
 
     if (admPopulated && admPopulated.bedId) {
-      console.log("   Bed:", admPopulated.bedId.bedNumber, `(${admPopulated.bedId.status})`);
+      console.log(
+        "   Bed:",
+        admPopulated.bedId.bedNumber,
+        `(${admPopulated.bedId.status})`,
+      );
     } else {
       console.log("   Bed: NULL");
     }
@@ -930,10 +934,7 @@ async function deepTest() {
 
     // Test getAppointments with status filter
     const completedAppts = await testPatient.getAppointments("COMPLETED");
-    console.log(
-      "patient.getAppointments('COMPLETED'):",
-      completedAppts.length,
-    );
+    console.log("patient.getAppointments('COMPLETED'):", completedAppts.length);
 
     // Test getPrescriptions
     const patientPrescriptions = await testPatient.getPrescriptions();
@@ -1033,3 +1034,4 @@ async function deepTest() {
 }
 
 deepTest();
+
