@@ -100,7 +100,7 @@ userSchema.virtual("fullName").get(function () {
 });
 
 // Pre-save: Hash password
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("passwordHash")) {
     return;
   }
@@ -134,7 +134,7 @@ userSchema.methods.toSafeObject = function () {
 };
 
 // Static method: Find by email
-userSchema.statics.findByEmail = function(email) {
+userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email: email.toLowerCase() });
 };
 
@@ -144,14 +144,14 @@ userSchema.statics.findByRole = function (role) {
 };
 
 // Find doctors by department
-userSchema.statics.findDoctorsByDepartment = function(departmentId) {
+userSchema.statics.findDoctorsByDepartment = function (departmentId) {
   return this.find({
-    role: 'DOCTOR',
+    role: "DOCTOR",
     departmentId,
-    isActive: true
-  }).populate('departmentId');
+    isActive: true,
+  }).populate("departmentId");
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;
