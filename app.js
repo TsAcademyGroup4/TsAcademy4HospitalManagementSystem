@@ -5,6 +5,7 @@ import morgan from "morgan";
 import "dotenv/config";
 import loginRoute from "./routes/auth.routes.js";
 import { connectDB } from "./db/config/database.js";
+import departmentRoutes from "./routes/department.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 8081;
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/auth", loginRoute);
+app.use("/api/admin", departmentRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to TsAcademy Group 4 Project" });
