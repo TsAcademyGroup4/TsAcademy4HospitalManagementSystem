@@ -40,6 +40,7 @@ export const getAllAvailableBeds = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      description: error.message,
     });
   }
 };
