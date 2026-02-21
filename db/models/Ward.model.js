@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Bed from "./Bed.model.js";
 
 const { Schema } = mongoose;
 
@@ -6,68 +7,74 @@ const wardSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Ward name is required'],
+      required: [true, "Ward name is required"],
       trim: true,
-      unique: true
+      unique: true,
     },
 
     wardType: {
       type: String,
-      required: [true, 'Ward type is required'],
+      required: [true, "Ward type is required"],
       enum: {
-        values: ['GENERAL', 'PRIVATE', 'ICU', 'EMERGENCY', 'PEDIATRIC', 'MATERNITY'],
-        message: '{VALUE} is not a valid ward type'
+        values: [
+          "GENERAL",
+          "PRIVATE",
+          "ICU",
+          "EMERGENCY",
+          "PEDIATRIC",
+          "MATERNITY",
+        ],
+        message: "{VALUE} is not a valid ward type",
       },
-      uppercase: true
+      uppercase: true,
     },
 
     capacity: {
       type: Number,
-      required: [true, 'Capacity is required'],
-      min: [1, 'Capacity must be at least 1']
+      required: [true, "Capacity is required"],
+      min: [1, "Capacity must be at least 1"],
     },
 
     floor: {
       type: Number,
-      min: 0
+      min: 0,
     },
 
     departmentId: {
       type: Schema.Types.ObjectId,
-      ref: 'Department'
+      ref: "Department",
     },
 
     isActive: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
-  }
+    toObject: { virtuals: true },
+  },
 );
 
 // Indexes
 wardSchema.index({ wardType: 1 });
 
-
 // Virtual: occupied beds
-wardSchema.virtual('occupiedBeds', {
-  ref: 'Bed',
-  localField: '_id',
-  foreignField: 'wardId',
+wardSchema.virtual("occupiedBeds", {
+  ref: "Bed",
+  localField: "_id",
+  foreignField: "wardId",
   count: true,
-  match: { status: 'OCCUPIED' }
+  match: { status: "OCCUPIED" },
 });
 
-// Instance method: Get available beds count 
-wardSchema.methods.getAvailableBedsCount = async function() {
-  const Bed = mongoose.model('Bed');
+// Instance method: Get available beds count
+wardSchema.methods.getAvailableBedsCount = async function () {
+  const Bed = mongoose.model("Bed");
   return await Bed.countDocuments({
     wardId: this._id,
-    status: 'AVAILABLE'
+    status: "AVAILABLE",
   });
 };
 
@@ -77,6 +84,6 @@ wardSchema.methods.getBeds = async function () {
   return await Bed.find({ wardId: this._id }).sort({ bedNumber: 1 });
 };
 
-const Ward = mongoose.model('Ward', wardSchema);
+const Ward = mongoose.model("Ward", wardSchema);
 
 export default Ward;
