@@ -32,4 +32,3 @@ const closeDB = async () => {
 };
 
 export { connectDB, closeDB };
-
