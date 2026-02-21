@@ -15,6 +15,7 @@ const departmentSchema = new Schema(
     description: {
       type: String,
       trim: true,
+      required: [true, "Department description is required"],
       maxlength: [500, "Desription cannot exceed 500 characters"],
     },
 
