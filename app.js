@@ -20,7 +20,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/auth", loginRoute);
-app.use("/api/admin", departmentRoutes);
+app.use("/api/admin/departments", departmentRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to TsAcademy Group 4 Project" });
