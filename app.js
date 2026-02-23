@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import { connectDB } from "./db/config/database";
+import authRoutes from "./routes/auth.routes.js";
 dotenv.config();
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 // ----------------------
 // Routes
 // ----------------------
+app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to TsAcademy Group 4 Project" });
 });
