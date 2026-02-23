@@ -1,4 +1,4 @@
-import User from "./../db/models/User.model";
+import User from "./../db/models/User.model.js";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
