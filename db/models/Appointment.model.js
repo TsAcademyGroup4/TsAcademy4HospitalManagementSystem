@@ -188,7 +188,7 @@ appointmentSchema.pre("save", async function () {
 
   const existingAppointment = await this.constructor.findOne({
     doctorId: this.doctorId,
-    appointentDate: this.appointentDate,
+    appointmentDate: this.appointmentDate,
     timeSlot: this.timeSlot,
     status: { $nin: ["CANCELLED", "NO_SHOW"] },
     _id: { $ne: this._id },
