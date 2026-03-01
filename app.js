@@ -7,7 +7,7 @@ import entryRoutes from "./routes/authRoutes.js";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import patientRoutes from "./routes/authRoutes.js";
+import patientRoutes from "./routes/patientRoute.js";
 
 const app = express();
 dotenv.config();
