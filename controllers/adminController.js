@@ -5,6 +5,15 @@ import { StatusCodes } from "http-status-codes";
 //POST /admin/users
 export const createUser = async (req, res) => {
     try {
+        const { firstName, lastName, email, password, phone, role, departmentId } = req.body;
+        // Required field validation
+        if (!firstName || !lastName || !email || !password || !role) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Required fields missing" });
+        }
+        if (password.length < 8) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Password must be at least 8 characters" });
+        }
+
         const user = await adminService.createUser(req.body);
         res.status(StatusCodes.CREATED).json({
             message: "User created successfully",
