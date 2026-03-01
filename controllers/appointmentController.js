@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import appointmentService from "../services/appointmentService.js";
+import * as appointmentService from "../services/appointmentService.js";
 import mongoose from "mongoose";
 
 export const createAppointment = async (req, res) => {
