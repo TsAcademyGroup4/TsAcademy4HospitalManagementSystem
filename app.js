@@ -1,13 +1,13 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
-import dotenv from "dotenv";
-import entryRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/authRoutes.js";
-import patientRoutes from "./routes/authRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
+import cors from "cors";
+import dotenv from "dotenv";
+import entryRoutes from "./routes/authRoutes.js";
+import express from "express";
+import helmet from "helmet";
+import morgan from "morgan";
+import patientRoutes from "./routes/authRoutes.js";
 
 const app = express();
 dotenv.config();
