@@ -1,43 +1,40 @@
-import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
+import User from "../db/models/User.model.js";
+import { StatusCodes, ReasonPhrases } from "http-status-codes";
 
-/**
- * Authentication middleware
- * This middleware verifies the JWT token sent in the Authorization header modified the request object to include the decoded token data (user ID, role, departmentId) for use in other handlers.
- */
-export const authenticate = (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Authentication required" });
+export const authMiddleware = async (req, res, next) => {
+    try {
+        // Check for Authorization header
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "No token provided. Authorization denied.",
+            });
+        }
+
+        const token = authHeader.split(" ")[1];
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error("JWT_SECRET not configured");
+
+        // Verify token
+        const decoded = jwt.verify(token, secret);
+
+        // Attach user
+        const user = await User.findById(decoded.sub);
+        if (!user || !user.isActive) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "User not found or inactive",
+            });
+        }
+
+        // Attach safe user object to request
+        req.user = user.toSafeObject();
+
+        next();
+    } catch (error) {
+        console.error(error);
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+            message: "Invalid or expired token",
+        });
     }
-
-    const token = authHeader.split(" ")[1];
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error("JWT_SECRET not configured");
-
-    // Attaching decoded JWT to req.auth
-    req.auth = jwt.verify(token, secret);
-
-    next();
-  } catch (error) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Invalid or expired token" });
-  }
-};
-/**
- * Authorize middleware
- * Uses closure to allow dynamic role-based access control
- * @param {string[]} allowedRoles - list of roles allowed to access the route
- */
-export const authorize = (allowedRoles = []) => {
-  return (req, res, next) => {
-    if (!req.auth) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Authentication required" });
-    }
-
-    if (allowedRoles.length && !allowedRoles.includes(req.auth.role)) {
-      return res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden: Access denied" });
-    }
-    next();
-  };
 };
