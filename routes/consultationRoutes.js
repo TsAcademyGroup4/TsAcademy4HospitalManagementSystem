@@ -10,7 +10,7 @@ router.post(
     "/",
     authMiddleware,
     authorizeRoles("DOCTOR", "NURSE"),
-    consultationController.create
+    consultationController.recordConsultation
 );
 
 // Get all → DOCTOR, NURSE, PHARMACY, ADMIN
@@ -18,15 +18,14 @@ router.get(
     "/",
     authMiddleware,
     authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
-    consultationController.getAll
-);
-
+    consultationController.getAllConsultations
+)
 // Get by ID → same as above
 router.get(
     "/:id",
     authMiddleware,
     authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
-    consultationController.getById
+    consultationController.getConsultationById
 );
 
 // Update → DOCTOR only
@@ -34,7 +33,7 @@ router.put(
     "/:id",
     authMiddleware,
     authorizeRoles("DOCTOR"),
-    consultationController.update
+    consultationController.updateConsultationById
 );
 
 // Delete → ADMIN only
@@ -42,7 +41,7 @@ router.delete(
     "/:id",
     authMiddleware,
     authorizeRoles("ADMIN"),
-    consultationController.delete
+    consultationController.deleteConsultationById
 );
 
 export default router;
