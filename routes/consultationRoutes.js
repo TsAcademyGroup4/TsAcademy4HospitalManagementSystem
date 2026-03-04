@@ -1,5 +1,5 @@
 import express from "express";
-import consultationController from "../controllers/consultationController.js";
+import * as consultationController from "../controllers/consultationController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
