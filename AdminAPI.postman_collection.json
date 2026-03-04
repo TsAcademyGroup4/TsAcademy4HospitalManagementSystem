@@ -1,0 +1,96 @@
+{
+    "info": {
+        "name": "Admin API",
+        "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
+        "description": "Admin API endpoints. All routes require ADMIN role and Bearer token authentication.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api/admin"
+        },
+        {
+            "key": "adminToken",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Users Management",
+            "description": "ADMIN-only endpoints for managing users",
+            "item": [
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                        {
+                            "key": "Authorization",
+                            "value": "Bearer {{adminToken}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json",
+                            "type": "text"
+                        }
+                        ],
+                        "body": {
+                        "mode": "raw",
+                        "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+                        },
+                        "url": {
+                        "raw": "{{baseUrl}}/users",
+                        "host": ["{{baseUrl}}"],
+                        "path": ["users"]
+                        },
+                        "description": "Creates a new user. Only accessible by ADMIN."
+                    }
+            },
+            {
+                "name": "Get Users (Paginated)",
+                "request": {
+                    "method": "GET",
+                    "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{adminToken}}",
+                        "type": "text"
+                    }
+                    ],
+                "url": {
+                "raw": "{{baseUrl}}/users?page=1&limit=10",
+                "host": ["{{baseUrl}}"],
+                "path": ["users"],
+                "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" }
+                ]
+                },
+                "description": "Returns paginated list of users. Query params: page, limit."
+            }
+            },
+            {
+            "name": "Deactivate User",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}",
+                    "type": "text"
+                }
+                ],
+                "url": {
+                "raw": "{{baseUrl}}/users/{{userId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["users", "{{userId}}"]
+                },
+                "description": "Deactivates a user by ID. ADMIN only."
+            }
+            }
+        ]
+        }
+    ]
+}
