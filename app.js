@@ -3,6 +3,7 @@ import authRoutes from "./routes/authRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import consultationRoutes from "./routes/consultationRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
+import admissionWardRoutes from "./routes/admissionWardRoute.js";
 
 import entryRoutes from "./routes/authRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
@@ -32,5 +33,6 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/appointments", appointmentRoutes);
 app.use("/api/v1/consultations", consultationRoutes);
 app.use("/api/v1/patient", patientRoutes);
-app.use("/api/v1/prescription", prescriptionRoutes);
+app.use("/api/v1/admissions", admissionWardRoutes);
+// app.use("/api/v1/prescription", prescriptionRoutes);
 export default app;
