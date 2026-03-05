@@ -1,4 +1,4 @@
-import * as patientRepository from "../repositories/patientRepository"
+import * as patientRepository from "../repositories/patientRepository.js"
 
 export const registerPatient = async (patientData) => {
   const { firstName, lastName, dob, gender, phone, address } = patientData; 
@@ -9,7 +9,7 @@ export const registerPatient = async (patientData) => {
   }
   
   // Create new patient record
-  const patientData = {
+  const patientDataObject = {
     firstName,
     lastName,
     dateOfBirth: dob,
@@ -18,7 +18,7 @@ export const registerPatient = async (patientData) => {
     address
   };
   
-  const newPatient = await patientRepository.createPatient(patientData);
+  const newPatient = await patientRepository.createPatient(patientDataObject);
   return newPatient;
 }
 

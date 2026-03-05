@@ -2,7 +2,6 @@ import adminRoutes from "./routes/authRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import consultationRoutes from "./routes/consultationRoutes.js";
-import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 import admissionWardRoutes from "./routes/admissionWardRoute.js";
 
 import entryRoutes from "./routes/authRoutes.js";
@@ -12,6 +11,8 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./swagger.js";
 
 const app = express();
 dotenv.config();
@@ -24,6 +25,12 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+// ----------------------
+// Swagger API Documentation
+// ----------------------
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // ----------------------
 // Routes
 // ----------------------
