@@ -84,15 +84,15 @@ const router = express.Router();
  */
 router.post(
     "/",
-    authMiddleware,
-    authorizeRoles("DOCTOR", "NURSE"),
+    // authMiddleware,
+    // authorizeRoles("DOCTOR", "NURSE"),
     consultationController.recordConsultation
 );
 
 router.get(
     "/",
-    authMiddleware,
-    authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
+    // authMiddleware,
+    // authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
     consultationController.getAllConsultations
 );
 
@@ -190,23 +190,23 @@ router.get(
  */
 router.get(
     "/:id",
-    authMiddleware,
-    authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
+    // authMiddleware,
+    // authorizeRoles("DOCTOR", "NURSE", "PHARMACY", "ADMIN"),
     consultationController.getConsultationById
 );
 
 router.put(
     "/:id",
-    authMiddleware,
-    authorizeRoles("DOCTOR"),
+    // authMiddleware,
+    // authorizeRoles("DOCTOR"),
     consultationController.updateConsultationById
 );
 
 router.delete(
     "/:id",
-    authMiddleware,
-    authorizeRoles("ADMIN"),
-    consultationController.deleteConsultationById
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    consultationController.removeConsultationById
 );
 
 export default router;
