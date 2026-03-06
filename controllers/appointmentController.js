@@ -4,41 +4,161 @@ import mongoose from "mongoose";
 
 export const createAppointment = async (req, res) => {
   try {
-    const appointment = await appointmentService.createAppointment(req.body);
+    const {
+      patientId,
+      doctorId,
+      departmentId,
+      appointmentDate,
+      timeSlot,
+      type,
+      reasonForVisit,
+      notes
+    } = req.body;
+
+    if (
+      !mongoose.Types.ObjectId.isValid(patientId) ||
+      !mongoose.Types.ObjectId.isValid(doctorId)
+    ) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Invalid patient or doctor ID"
+      });
+    }
+
+    const appointment = await appointmentService.createAppointment({
+      patientId,
+      doctorId,
+      departmentId,
+      appointmentDate,
+      timeSlot,
+      type,
+      reasonForVisit,
+      notes,
+      createdBy: req.user?._id || null
+    });
+
     return res.status(StatusCodes.CREATED).json(appointment);
+
   } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: error.message
+    });
   }
 };
+
 
 export const getDoctorAppointments = async (req, res) => {
   try {
     const { doctorId } = req.params;
-    const date = (req.query.date) ? new Date(req.query.date) : new Date();
 
     if (!mongoose.Types.ObjectId.isValid(doctorId)) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid doctor ID" });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Invalid doctor ID"
+      });
     }
+
+    const date = req.query.date ? new Date(req.query.date) : new Date();
 
     const appointments = await appointmentService.getDoctorAppointments(
       doctorId,
       date
     );
 
-    return res.status(StatusCodes.ACCEPTED).json(appointments);
+    return res.status(StatusCodes.OK).json(appointments);
+
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: error.message
+    });
+  }
+};
+
+
+export const updateAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Invalid appointment ID"
+      });
+    }
+
+    const {
+      appointmentDate,
+      timeSlot,
+      type,
+      reasonForVisit,
+      notes
+    } = req.body;
+
+    const updated = await appointmentService.updateAppointment(
+      appointmentId,
+      {
+        appointmentDate,
+        timeSlot,
+        type,
+        reasonForVisit,
+        notes
+      }
+    );
+
+    return res.status(StatusCodes.OK).json(updated);
+
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: error.message
+    });
+  }
+};
+
+
+export const getPatientAppointments = async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    // Validate patientId
+    const appointments = await appointmentService.getPatientAppointments(patientId);
+    return res.status(StatusCodes.OK).json(appointments);
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 };
 
-export const updateAppointment = async (req, res) => {
+export const getAvailableSlots = async (req, res) => {
   try {
-    const updated = await appointmentService.updateAppointment(
-      req.params.appointmentId,
-      req.body
-    );
+    const { doctorId } = req.params;
+    const { date } = req.query;
+    const slots = await appointmentService.getAvailableSlots(doctorId, new Date(date));
+    return res.status(StatusCodes.OK).json({ availableSlots: slots });
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+};
 
-    return res.status(StatusCodes.ACCEPTED).json(updated);
+export const getTodayAppointments = async (req, res) => {
+  try {
+    const doctorId = req.user._id; // Assuming logged-in user is doctor
+    const appointments = await appointmentService.getDoctorAppointments(doctorId, new Date());
+    return res.status(StatusCodes.OK).json(appointments);
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+};
+
+export const completeAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const completed = await appointmentService.completeAppointment(appointmentId);
+    return res.status(StatusCodes.OK).json(completed);
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+};
+
+export const markNoShow = async (req, res) => {
+  try {
+    const { appointmentId } = req.params;
+    const noShow = await appointmentService.markNoShow(appointmentId);
+    return res.status(StatusCodes.OK).json(noShow);
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
@@ -46,19 +166,30 @@ export const updateAppointment = async (req, res) => {
 
 export const cancelAppointment = async (req, res) => {
   try {
+    const { appointmentId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Invalid appointment ID"
+      });
+    }
+
     const reason = req.body?.reason || "Cancelled by front desk";
 
     const cancelled = await appointmentService.cancelAppointment(
-      req.params.appointmentId,
+      appointmentId,
       reason,
       req.user?._id || null
     );
 
-    return res.status(StatusCodes.ACCEPTED).json({
+    return res.status(StatusCodes.OK).json({
       message: "Appointment cancelled successfully",
-      cancelled,
+      cancelled
     });
+
   } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: error.message
+    });
   }
 };
