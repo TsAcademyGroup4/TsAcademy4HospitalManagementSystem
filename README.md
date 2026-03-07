@@ -44,3 +44,13 @@ This project was developed solely for educational purposes as part of an academi
 npm (comes with Node.js)
 
 MongoDB (local installation or MongoDB Atlas)
+
+
+
+## Students
+
+| S/N | Student ID | Name |
+|-----|------------|------|
+| 1 | TSB25051605 | Vincent Akinsoyinu |
+| 2 | TS36721 | Dennis Favour |
+| 3 | TS113286 | Onyekachi Jasper-Duruzor |
