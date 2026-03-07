@@ -32,7 +32,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // ----------------------
 // Routes
 // ----------------------
-app.get("/api/v1", entryRoutes);
+app.get("", entryRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/appointments", appointmentRoutes);
