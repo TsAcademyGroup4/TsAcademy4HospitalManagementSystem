@@ -54,3 +54,6 @@ MongoDB (local installation or MongoDB Atlas)
 | 1 | TSB25051605 | Vincent Akinsoyinu |
 | 2 | TS36721 | Dennis Favour |
 | 3 | TS113286 | Onyekachi Jasper-Duruzor |
+| 4 | TS113319 | Ugonna Ekeh |
+| 5 | TSB25051971 | Shittu AbdulSamad Ololade |
+| 6 | NOT PROVIDED | Alexander Chimauche Emmanuel |
