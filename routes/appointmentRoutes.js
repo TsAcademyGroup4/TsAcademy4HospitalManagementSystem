@@ -23,7 +23,8 @@ const router = express.Router();
  *               - patientId
  *               - doctorId
  *               - appointmentDate
- *               - appointmentTime
+ *               - startTime
+ *               - endTime
  *               - reason
  *             properties:
  *               patientId:
@@ -36,10 +37,14 @@ const router = express.Router();
  *                 type: string
  *                 format: date
  *                 example: 2026-03-15
- *               appointmentTime:
+ *               startTime:
  *                 type: string
  *                 format: time
- *                 example: "10:30"
+ *                 example: "10:00"
+ *               endTime:
+ *                 type: string
+ *                 format: time
+ *                 example: "11:00"
  *               reason:
  *                 type: string
  *                 example: Regular checkup
@@ -123,8 +128,12 @@ router.get("/doctor/:doctorId", appointmentController.getDoctorAppointments);
  *               appointmentDate:
  *                 type: string
  *                 format: date
- *               appointmentTime:
+ *               startTime:
  *                 type: string
+ *                 format: time
+ *               endTime:
+ *                 type: string
+ *                 format: time
  *               reason:
  *                 type: string
  *     responses:

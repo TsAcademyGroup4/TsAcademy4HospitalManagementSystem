@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUsers, deactivateUser } from "../controllers/adminController.js";
+import { createUser, getUsers, deactivateUser, createDepartment, getDepartments, getDepartmentById, updateDepartment, deleteDepartment } from "../controllers/adminController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
@@ -164,6 +164,199 @@ router.delete(
     // authMiddleware,
     // authorizeRoles("ADMIN"),
     deactivateUser
+);
+
+/**
+ * @swagger
+ * /api/v1/admin/departments:
+ *   post:
+ *     summary: Create a new department
+ *     description: Create a new department (Admin only)
+ *     tags:
+ *       - Admin Management
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Cardiology
+ *               description:
+ *                 type: string
+ *                 example: Heart care department
+ *               code:
+ *                 type: string
+ *                 example: CARD
+ *     responses:
+ *       201:
+ *         description: Department created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       400:
+ *         description: Invalid input or department already exists
+ *       401:
+ *         description: Unauthorized
+ *   get:
+ *     summary: Get all departments
+ *     description: Retrieve all departments (Admin only)
+ *     tags:
+ *       - Admin Management
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *         description: Filter by active status
+ *     responses:
+ *       200:
+ *         description: Departments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       401:
+ *         description: Unauthorized
+ */
+router.post(
+    "/departments",
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    createDepartment
+);
+
+router.get(
+    "/departments",
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    getDepartments
+);
+
+/**
+ * @swagger
+ * /api/v1/admin/departments/{departmentId}:
+ *   get:
+ *     summary: Get department by ID
+ *     description: Retrieve a specific department (Admin only)
+ *     tags:
+ *       - Admin Management
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Department ID
+ *     responses:
+ *       200:
+ *         description: Department retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       404:
+ *         description: Department not found
+ *       401:
+ *         description: Unauthorized
+ *   put:
+ *     summary: Update a department
+ *     description: Modify department details (Admin only)
+ *     tags:
+ *       - Admin Management
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Department ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Department updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       404:
+ *         description: Department not found
+ *       401:
+ *         description: Unauthorized
+ *   delete:
+ *     summary: Delete a department
+ *     description: Remove a department (Admin only)
+ *     tags:
+ *       - Admin Management
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Department ID
+ *     responses:
+ *       200:
+ *         description: Department deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       404:
+ *         description: Department not found
+ *       409:
+ *         description: Cannot delete department with active staff
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+    "/departments/:departmentId",
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    getDepartmentById
+);
+
+router.put(
+    "/departments/:departmentId",
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    updateDepartment
+);
+
+router.delete(
+    "/departments/:departmentId",
+    // authMiddleware,
+    // authorizeRoles("ADMIN"),
+    deleteDepartment
 );
 
 export default router;

@@ -4,7 +4,6 @@ import appointmentRoutes from "./routes/appointmentRoutes.js";
 import consultationRoutes from "./routes/consultationRoutes.js";
 import admissionWardRoutes from "./routes/admissionWardRoute.js";
 import pharmacyRoutes from "./routes/pharmacyRoutes.js";
-
 import entryRoutes from "./routes/authRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import cors from "cors";
@@ -26,12 +25,10 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-
 // ----------------------
 // Swagger API Documentation
 // ----------------------
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 // ----------------------
 // Routes
 // ----------------------

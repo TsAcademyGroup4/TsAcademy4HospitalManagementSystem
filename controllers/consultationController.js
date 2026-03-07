@@ -3,7 +3,15 @@ import {StatusCodes} from "http-status-codes";
 
 export const recordConsultation = async (req, res) => {
     try {
-        const consultation = await consultationService.recordConsultation(req.body);
+        const { patientId, doctorId, symptoms } = req.body;
+        // Required field validation
+        if (!patientId || !doctorId || !symptoms) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: "Patient ID, Doctor ID and Symptoms are required"
+            });
+        }
+        const consultation = await consultationService.recordConsultation({ patientId, doctorId, symptoms });
         return res.status(StatusCodes.CREATED).json({
             message: "Consultation created successfully",
             success: true,
@@ -35,7 +43,14 @@ export const getAllConsultations = async (req, res) => {
 
 export const getConsultationById = async (req, res) => {
     try {
-        const consultation = await consultationService.getConsultationById(req.params.id);
+        const { id } = req.params;
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: "Consultation ID is required"
+            });
+        }
+        const consultation = await consultationService.getConsultationById(id);
         return res.status(StatusCodes.OK).json({
             message: "Consultation retrieved successfully",
             success: true,
@@ -51,7 +66,14 @@ export const getConsultationById = async (req, res) => {
 
 export const updateConsultationById = async (req, res) => {
     try {
-        const updated = await consultationService.updateConsultationById(req.params.id, req.body);
+        const { id } = req.params;
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: "Consultation ID is required"
+            });
+        }
+        const updated = await consultationService.updateConsultationById(id, req.body);
         return res.status(StatusCodes.OK).json({
             message: "Consultation updated successfully",
             success: true,
@@ -67,7 +89,14 @@ export const updateConsultationById = async (req, res) => {
 
 export const removeConsultationById = async (req, res) => {
     try {
-        await consultationService.deleteConsultationById(req.params.id);
+        const { id } = req.params;
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: "Consultation ID is required"
+            });
+        }
+        await consultationService.deleteConsultationById(id);
         return res.status(StatusCodes.OK).json({
             message: "Consultation deleted successfully",
             success: true,

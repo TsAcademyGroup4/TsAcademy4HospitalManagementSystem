@@ -23,7 +23,7 @@ const appointmentSchema = new Schema(
 
     departmentId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Department",
       required: [true, "Doctor is required"],
     },
 
@@ -43,13 +43,33 @@ const appointmentSchema = new Schema(
       },
     },
 
-    timeSlot: {
+    startTime: {
       type: String,
-      required: [true, "Time slot is required"],
+      required: [true, "Start time is required"],
       match: [
         /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
         "Invalid time format, Use HH:MM format",
       ],
+    },
+
+    endTime: {
+      type: String,
+      required: [true, "End time is required"],
+      match: [
+        /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+        "Invalid time format, Use HH:MM format",
+      ],
+      validate: {
+        validator: function (value) {
+          if (!this.startTime) return true; // Skip if startTime not set yet
+          const start = this.startTime.split(':').map(Number);
+          const end = value.split(':').map(Number);
+          const startMinutes = start[0] * 60 + start[1];
+          const endMinutes = end[0] * 60 + end[1];
+          return endMinutes > startMinutes;
+        },
+        message: "End time must be after start time",
+      },
     },
 
     type: {
@@ -122,15 +142,26 @@ const appointmentSchema = new Schema(
 // Indexes
 appointmentSchema.index({ doctorId: 1, appointmentDate: 1 });
 appointmentSchema.index({ patientId: 1, appointmentDate: -1 });
-appointmentSchema.index({ doctorId: 1, appointmentDate: 1, timeSlot: 1 });
+appointmentSchema.index({ doctorId: 1, appointmentDate: 1, startTime: 1 });
 appointmentSchema.index({ status: 1 });
 appointmentSchema.index({ departmentId: 1, appointmentDate: 1 });
 
 // Virtual: fullDateTime
 appointmentSchema.virtual("fullDateTime").get(function () {
-  if (!this.appointmentDate || !this.timeSlot) return null;
+  if (!this.appointmentDate || !this.startTime) return null;
 
-  const [hours, minutes] = this.timeSlot.split(":");
+  const [hours, minutes] = this.startTime.split(":");
+  const dateTime = new Date(this.appointmentDate);
+  dateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+  return dateTime;
+});
+
+// Virtual: fullEndDateTime
+appointmentSchema.virtual("fullEndDateTime").get(function () {
+  if (!this.appointmentDate || !this.endTime) return null;
+
+  const [hours, minutes] = this.endTime.split(":");
   const dateTime = new Date(this.appointmentDate);
   dateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
@@ -180,7 +211,8 @@ appointmentSchema.pre("save", async function () {
 appointmentSchema.pre("save", async function () {
   if (
     !this.isModified("appointmentDate") &&
-    !this.isModified("timeSlot") &&
+    !this.isModified("startTime") &&
+    !this.isModified("endTime") &&
     !this.isNew
   ) {
     return;
@@ -189,13 +221,17 @@ appointmentSchema.pre("save", async function () {
   const existingAppointment = await this.constructor.findOne({
     doctorId: this.doctorId,
     appointmentDate: this.appointmentDate,
-    timeSlot: this.timeSlot,
     status: { $nin: ["CANCELLED", "NO_SHOW"] },
     _id: { $ne: this._id },
+    $or: [
+      { $and: [{ startTime: { $lt: this.endTime } }, { endTime: { $gt: this.startTime } }] },
+      { $and: [{ startTime: { $lte: this.startTime } }, { endTime: { $gte: this.endTime } }] },
+      { $and: [{ startTime: { $gte: this.startTime } }, { endTime: { $lte: this.endTime } }] }
+    ]
   });
 
   if (existingAppointment) {
-    throw new Error("Doctor already has an appointment at this time");
+    throw new Error("Doctor already has an overlapping appointment");
   }
 });
 
@@ -246,7 +282,7 @@ appointmentSchema.statics.getDoctorAppointments = function (doctorId, date) {
     status: { $nin: ["CANCELLED"] },
   })
     .populate("patientId", "firstName lastName patientId phone")
-    .sort({ timeSlot: 1 });
+    .sort({ startTime: 1 });
 };
 
 // Get today's appointments
@@ -282,7 +318,7 @@ appointmentSchema.statics.getAvailableSlots = async function (
   }
 
   const appointments = await this.getDoctorAppointments(doctorId, date);
-  const bookedSlots = appointments.map((apt) => apt.timeSlot);
+  const bookedSlots = appointments.map((apt) => apt.startTime);
 
   return workingHours.filter((slot) => !bookedSlots.includes(slot));
 };
