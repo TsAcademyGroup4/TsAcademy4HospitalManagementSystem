@@ -1,4 +1,4 @@
-import consultation from '../db/models/Consultation.model.js';
+import Consultation from '../db/models/Consultation.model.js';
 
 //Create a new consultation
 class ConsultationRepository {

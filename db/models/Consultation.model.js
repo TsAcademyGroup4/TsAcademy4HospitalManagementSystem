@@ -18,7 +18,7 @@ const consultationSchema = new Schema(
     doctorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      require: [true, "Doctor is required"],
+      required: [true, "Doctor is required"],
     },
 
     diagnosis: {
@@ -57,7 +57,7 @@ const consultationSchema = new Schema(
       uppercase: true,
     },
 
-    refferedTo: {
+    referredTo: {
       departmentId: {
         type: Schema.Types.ObjectId,
         ref: "Department",
@@ -75,7 +75,7 @@ const consultationSchema = new Schema(
 
     consultationDate: {
       type: Date,
-      required: true,
+      required: [true, "Consultation date is required"],
       default: Date.now,
     },
   },
