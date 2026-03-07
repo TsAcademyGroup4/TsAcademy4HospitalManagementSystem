@@ -1,5 +1,6 @@
 import appointmentRepository from "../repositories/appointment.repository.js";
 
+<<<<<<< Updated upstream
 const WORKING_HOURS = [
   "09:00","09:30","10:00","10:30",
   "11:00","11:30","12:00","12:30",
@@ -7,6 +8,8 @@ const WORKING_HOURS = [
   "15:00","15:30","16:00","16:30"
 ];
 
+=======
+>>>>>>> Stashed changes
 // helper to convert HH:MM into minutes
 const toMinutes = (t) => {
   const [h, m] = t.split(":").map(Number);
