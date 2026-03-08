@@ -44,3 +44,20 @@ This project was developed solely for educational purposes as part of an academi
 npm (comes with Node.js)
 
 MongoDB (local installation or MongoDB Atlas)
+
+
+
+## Students
+
+| S/N | Student ID | Name |
+|-----|------------|------|
+| 1 | TSB25051605 | Vincent Akinsoyinu |
+| 2 | TS36721 | Dennis Favour |
+| 3 | TS113286 | Onyekachi Jasper-Duruzor |
+| 4 | TS113319 | Ugonna Ekeh |
+| 5 | TSB25051971 | Shittu AbdulSamad Ololade |
+| 6 | NOT PROVIDED | Alexander Chimauche Emmanuel |
+| 7 | TSB25051235 | Othniel Chukwuani |
+| 8 | TSB25051488 | Joe, Andino |
+| 9 | TS32330 | Abraham Oladipupo |
+| 9 | NOT PROVIDED | Azu Chukwuemeka **[Team Lead]** |
