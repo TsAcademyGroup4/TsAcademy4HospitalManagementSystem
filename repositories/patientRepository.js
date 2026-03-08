@@ -37,8 +37,12 @@ export const findPatientByPhone = async (phone) => {
  */
 export const findPatientById = async (patientId) => {
   try {
-    let patient = await Patient.findById(patientId);   
-    // If not found by MongoDB _id, try finding by custom patientId
+    let patient;
+    // Check if it is a MongoDB ObjectId
+    if (mongoose.Types.ObjectId.isValid(patientId)) {
+      patient = await Patient.findById(patientId);
+    }
+    // If not found or not an ObjectId, search by custom patientId
     if (!patient) {
       patient = await Patient.findByPatientId(patientId);
     }

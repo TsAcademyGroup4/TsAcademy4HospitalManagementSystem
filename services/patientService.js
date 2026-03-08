@@ -22,11 +22,7 @@ export const registerPatient = async (patientData) => {
   return newPatient;
 }
 
-export const getPatientById = async(patientId) => {
-  if (!patientId) {
-    throw new Error("Patient ID is required");
-  }
-  
+export const getPatientById = async(patientId) => {  
   const patient = await patientRepository.findPatientById(patientId);
   if (!patient) {
     throw new Error("Patient not found");

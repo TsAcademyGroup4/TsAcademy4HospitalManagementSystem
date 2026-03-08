@@ -168,7 +168,7 @@ patientSchema.pre("save", async function () {
   this.patientId = `PAT-${String(nextNumber).padStart(5, "0")}`;
 });
 
-// Instanc method: Get medical history
+// Instance method: Get medical history
 patientSchema.methods.getMedicalHistory = async function () {
   const Consultation = mongoose.model("Consultation");
   return await Consultation.find({ patientId: this._id })

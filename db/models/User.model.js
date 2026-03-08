@@ -100,7 +100,7 @@ userSchema.virtual("fullName").get(function () {
 });
 
 // Pre-save: Hash password
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("passwordHash")) {
     return;
   }
