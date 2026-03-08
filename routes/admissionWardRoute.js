@@ -1,5 +1,8 @@
 import express from "express";
 import * as admissionWardController from "../controllers/admissionWardController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+
 
 const router = express.Router();
 
@@ -33,7 +36,12 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.get("/available-beds", admissionWardController.getAvailableBeds);
+router.get(
+    "/available-beds", 
+    authMiddleware,
+    authorizeRoles("NURSE"),
+    admissionWardController.getAvailableBeds
+);
 
 /**
  * @swagger
@@ -88,7 +96,12 @@ router.get("/available-beds", admissionWardController.getAvailableBeds);
  *       401:
  *         description: Unauthorized
  */
-router.post("/admissions/create", admissionWardController.createWardAdmission);
+router.post(
+    "/admissions/create", 
+    authMiddleware,
+    authorizeRoles("NURSE"),
+    admissionWardController.createWardAdmission
+);
 
 /**
  * @swagger
@@ -154,7 +167,12 @@ router.post("/admissions/create", admissionWardController.createWardAdmission);
  *       401:
  *         description: Unauthorized
  */
-router.put("/admissions/:admissionId/vitals", admissionWardController.updatePatientVitals);
+router.put(
+    "/admissions/:admissionId/vitals", 
+    authMiddleware,
+    authorizeRoles("NURSE"),
+    admissionWardController.updatePatientVitals
+);
 
 /**
  * @swagger
@@ -207,6 +225,11 @@ router.put("/admissions/:admissionId/vitals", admissionWardController.updatePati
  *       401:
  *         description: Unauthorized
  */
-router.put("/admissions/:admissionId/discharge", admissionWardController.dischargePatient);
+router.put(
+    "/admissions/:admissionId/discharge", 
+    authMiddleware,
+    authorizeRoles("NURSE"),
+    admissionWardController.dischargePatient
+);
 
 export default router;

@@ -118,15 +118,15 @@ const router = express.Router();
  */
 router.post(
     "/users",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     createUser
 );
 
 router.get(
     "/users",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     getUsers
 );
 
@@ -161,8 +161,8 @@ router.get(
  */
 router.delete(
     "/users/:userId",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     deactivateUser
 );
 
@@ -230,15 +230,15 @@ router.delete(
  */
 router.post(
     "/departments",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     createDepartment
 );
 
 router.get(
     "/departments",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     getDepartments
 );
 
@@ -340,22 +340,22 @@ router.get(
  */
 router.get(
     "/departments/:departmentId",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     getDepartmentById
 );
 
 router.put(
     "/departments/:departmentId",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     updateDepartment
 );
 
 router.delete(
     "/departments/:departmentId",
-    // authMiddleware,
-    // authorizeRoles("ADMIN"),
+    authMiddleware,
+    authorizeRoles("ADMIN"),
     deleteDepartment
 );
 

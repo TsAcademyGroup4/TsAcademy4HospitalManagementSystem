@@ -1,5 +1,8 @@
 import express from "express";
 import * as patientController from "../controllers/patientController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+
 
 const router = express.Router();
 
@@ -59,7 +62,12 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/register", patientController.registerPatient);
+router.post(
+    "/register", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST"),
+    patientController.registerPatient
+);
 
 /**
  * @swagger
@@ -94,7 +102,12 @@ router.post("/register", patientController.registerPatient);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get("/search", patientController.searchPatient);
+router.get(
+    "/search", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "DOCTOR", "NURSE"),
+    patientController.searchPatient
+);
 
 /**
  * @swagger
@@ -125,6 +138,10 @@ router.get("/search", patientController.searchPatient);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get("/:id", patientController.getPatientById);
+router.get("/:id", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "DOCTOR", "NURSE"),
+    patientController.getPatientById
+);
 
 export default router;

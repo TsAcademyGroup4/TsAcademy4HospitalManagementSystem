@@ -1,5 +1,7 @@
 import express from "express";
 import * as appointmentController from "../controllers/appointmentController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
@@ -64,7 +66,12 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.post("/", appointmentController.createAppointment);
+router.post(
+    "/", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "PATIENT", "DOCTOR"),
+    appointmentController.createAppointment
+);
 
 /**
  * @swagger
@@ -99,7 +106,12 @@ router.post("/", appointmentController.createAppointment);
  *       401:
  *         description: Unauthorized
  */
-router.get("/doctor/:doctorId", appointmentController.getDoctorAppointments);
+router.get(
+    "/doctor/:doctorId", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "DOCTOR"),
+    appointmentController.getDoctorAppointments
+);
 
 /**
  * @swagger
@@ -173,8 +185,17 @@ router.get("/doctor/:doctorId", appointmentController.getDoctorAppointments);
  *       401:
  *         description: Unauthorized
  */
-router.put("/:appointmentId", appointmentController.updateAppointment);
+router.put(
+    "/:appointmentId", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "DOCTOR"),
+    appointmentController.updateAppointment
+);
 
-router.delete("/:appointmentId", appointmentController.cancelAppointment);
+router.delete("/:appointmentId", 
+    authMiddleware,
+    authorizeRoles("ADMIN", "RECEPTIONIST", "DOCTOR"),
+    appointmentController.cancelAppointment
+);
 
 export default router;

@@ -32,7 +32,7 @@ export const createUser = async (data) => {
         lastName,
         email: normalizedEmail,
         phone,
-        role,
+        role: role.toUpperCase(),
         departmentId,
         passwordHash: password,
     });
