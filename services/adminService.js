@@ -5,13 +5,26 @@ import { StatusCodes } from "http-status-codes";
 
 //Create a new user (admin)
 
+const ACTORS = ["DOCTOR", "NURSE", "PHARMACY", "PATIENT", "ADMIN"];
+
 export const createUser = async (data) => {
     const { firstName, lastName, email, password, phone, role, departmentId } = data;
     const normalizedEmail = email.toLowerCase();
+    // Validate role
+    if (!ACTORS.includes(role)) {
+        throw {
+            statusCode: StatusCodes.BAD_REQUEST,
+            message: `Invalid role. Allowed roles are: ${ACTORS.join(", ")}`
+        };
+    }
+
     // Check duplicate email
     const existingUser = await userRepository.findByEmail(normalizedEmail);
     if (existingUser) {
-        throw { statusCode: StatusCodes.CONFLICT, message: "User with this email already exists" };
+        throw {
+            statusCode: StatusCodes.CONFLICT,
+            message: "User with this email already exists"
+        };
     }
 
     // Validate department if provided
@@ -26,15 +39,15 @@ export const createUser = async (data) => {
         }
     }
 
-    // Create user — Mongoose schema handles role enum & uppercase, password hash via pre-save hook
+    // Create user
     const user = await userRepository.create({
         firstName,
         lastName,
         email: normalizedEmail,
         phone,
-        role: role.toUpperCase(),
+        role,
         departmentId,
-        passwordHash: password,
+        passwordHash: password
     });
 
     return user.toSafeObject();
